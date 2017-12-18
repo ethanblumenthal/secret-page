@@ -1,6 +1,10 @@
 var express = require('express'),
-    mongoose = require('mongoose');
-mongoose.connect('mongodb://localhost/secret_page');
+    mongoose = require('mongoose'),
+    passport = require('passport'),
+    bodyParser = require('body-parser'),
+    localStrategy = require('passport-local'),
+    passportLocalMongoose = require('passport-local-mongoose');
+mongoose.connect('mongodb://localhost/secret_page', {useMongoClient: true});
 
 var app = express();
 app.set('view engine', 'ejs');

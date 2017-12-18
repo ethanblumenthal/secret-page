@@ -21,6 +21,7 @@ app.use(require('express-session')({
 app.use(passport.initialize());
 app.use(passport.session());
 
+passport.use(new LocalStrategy(User.authenticate()));
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
@@ -32,12 +33,12 @@ app.get('/secret', function(req,res) {
     res.render('secret');
 });
 
-// SHOW signup form
+// SHOW - register
 app.get('/register', function(req, res) {
     res.render('register');
 });
 
-// CREATE user signup
+// CREATE - register
 app.post('/register', function(req, res) {
     req.body.username
     req.body.password
@@ -50,6 +51,18 @@ app.post('/register', function(req, res) {
             res.render('secret');
         });
     });
+});
+
+// SHOW - login
+app.get('/login', function(req, res) {
+    res.render('login');
+});
+
+// CREATE - login
+app.post('/login', passport.authenticate('local', {
+    successRedirect: '/secret',
+    failureRedirect: '/login'
+}), function(req, res) {
 });
 
 app.listen(3000, function() {

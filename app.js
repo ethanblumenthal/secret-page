@@ -25,11 +25,13 @@ passport.use(new LocalStrategy(User.authenticate()));
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
+// SHOW - home
 app.get('/', function(req, res) {
     res.render('home');
 });
 
-app.get('/secret', function(req,res) {
+// SHOW - secret
+app.get('/secret', isLoggedIn, function(req,res) {
     res.render('secret');
 });
 
@@ -70,6 +72,14 @@ app.get('/logout', function(req, res) {
     req.logout();
     res.redirect('/');
 });
+
+// secret middleware
+function isLoggedIn(req, res, next) {
+    if (req.isAuthenticated()) {
+        return next();
+    }
+    res.redirect('login');
+};
 
 app.listen(3000, function() {
     console.log('Serving on localhost:3000');

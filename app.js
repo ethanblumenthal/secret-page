@@ -15,8 +15,8 @@ app.use(require('express-session')({
     resave: false,
     saveUninitialized: false
 }));
-app.use(passport.initialize);
-app.use(passport.session);
+app.use(passport.initialize());
+app.use(passport.session());
 
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
@@ -27,6 +27,16 @@ app.get('/', function(req, res) {
 
 app.get('/secret', function(req,res) {
     res.render('secret');
+});
+
+// SHOW signup form
+app.get('/register', function(rqq, res) {
+    res.render('register');
+});
+
+// CREATE user signup
+app.post('/register', function(req, res) {
+    res.send('register post route');
 });
 
 app.listen(3000, function() {

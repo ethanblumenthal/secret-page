@@ -5,11 +5,14 @@ var express = require('express'),
     User = require('./models/user'),
     LocalStrategy = require('passport-local'),
     passportLocalMongoose = require('passport-local-mongoose');
+
 mongoose.connect('mongodb://localhost/secret_page', {useMongoClient: true});
+mongoose.Promise = global.Promise;
 
 var app = express();
 app.set('view engine', 'ejs');
 
+app.use(bodyParser.urlencoded({extended: true}));
 app.use(require('express-session')({
     secret: 'Ethan rocks!',
     resave: false,
@@ -30,13 +33,23 @@ app.get('/secret', function(req,res) {
 });
 
 // SHOW signup form
-app.get('/register', function(rqq, res) {
+app.get('/register', function(req, res) {
     res.render('register');
 });
 
 // CREATE user signup
 app.post('/register', function(req, res) {
-    res.send('register post route');
+    req.body.username
+    req.body.password
+    User.register(new User({username: req.body.username}), req.body.password, function(err, user) {
+        if (err) {
+            console.log(err);
+            return res.render('register');
+        }
+        passport.authenticate('local')(req, res, function() {
+            res.render('secret');
+        });
+    });
 });
 
 app.listen(3000, function() {
